@@ -1,0 +1,44 @@
+#define qtype pair<int,string>
+class myComparator
+{
+public:
+    int operator() (const qtype& p1, const qtype& p2)
+    {
+        if( p1.first == p2.first)
+        {
+            //if freq of two words are same then choose the word which alphabetically comes first
+            return ((p1.second).compare(p2.second) < 0);
+        }
+        return p1.first > p2.first;
+    }
+};
+class Solution {
+public:
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        map<string,int> freqtable;
+        int i = 0;
+        for(;i<words.size();++i)
+        {
+            freqtable[words[i]]++;
+        }
+        //declare a min-heap 
+        priority_queue<pair<int,string>,vector<pair<int,string> >,myComparator> p;
+        map<string,int>::iterator it = freqtable.begin();
+        for(;it!=freqtable.end();++it)
+        {
+            p.push(make_pair(it->second,it->first));
+            if(p.size() > k)
+            {
+                p.pop();
+            }
+        }
+        vector<string> result;
+        while(!p.empty())
+        {
+            result.insert(result.begin(),(p.top()).second);
+            p.pop();
+        }
+        return result;
+
+    }
+};
